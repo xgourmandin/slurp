@@ -1,0 +1,10 @@
+url: https://api.punkapi.com/v2/beers
+method: GET
+pagination:
+  type: PAGE_LIMIT
+  page_param: page
+  limit_param: per_page
+  page_size: 25
+data:
+  type: json
+  root: "$"

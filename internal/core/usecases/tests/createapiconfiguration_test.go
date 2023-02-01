@@ -61,6 +61,20 @@ func TestPaginatedApi(t *testing.T) {
 	}
 }
 
+func TestAuthenticatedApi(t *testing.T) {
+	configurationUseCase := usecases.CreateApiConfigurationUseCase{
+		ApiRepository: MockApiRepository{},
+	}
+
+	configuration, err := configurationUseCase.CreateApiConfiguration("auth_api")
+	if err != nil {
+		t.Errorf("Configuration shall be correctly created")
+	}
+	if configuration.AuthConfig.AuthType != "API_KEY" {
+		t.Errorf("Authentication configuration shall have the right type")
+	}
+}
+
 type MockApiRepository struct {
 }
 

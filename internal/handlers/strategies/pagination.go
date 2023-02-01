@@ -14,7 +14,7 @@ func (s NoPaginationStrategy) ApplyPagination(req http.Request) http.Request {
 	return req
 }
 
-func (NoPaginationStrategy) HasMoreData(response []byte) bool {
+func (NoPaginationStrategy) HasMoreData(_ []byte) bool {
 	return false
 }
 
@@ -36,7 +36,7 @@ func (s *PageLimitPaginationStrategy) ApplyPagination(req http.Request) http.Req
 	return req
 }
 
-func (s PageLimitPaginationStrategy) HasMoreData(response []byte) bool {
+func (s *PageLimitPaginationStrategy) HasMoreData(response []byte) bool {
 	if s.MoreItemsPath == nil {
 		return s.dataStrategy.GetResultSize(response) == s.LimitValue
 	} else {

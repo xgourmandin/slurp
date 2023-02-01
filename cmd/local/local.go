@@ -22,6 +22,6 @@ func main() {
 		ApiConfig: *apiConfiguration,
 	}
 
-	usecases.SlurpAnApiUseCase{ReqHandler: handlers.HttpGetHandler{}}.SlurpAPI(ctx)
+	usecases.SlurpAnApiUseCase{ReqHandler: handlers.HttpHandler{}}.SlurpAPI(ctx)
 
 }

@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -8,13 +9,10 @@ import (
 	"slurp/internal/core/domain"
 )
 
-type HttpGetHandler struct {
+type HttpHandler struct {
 }
 
-type HttpPostHandler struct {
-}
-
-func (HttpGetHandler) SendRequest(ctx domain.Context) []byte {
+func (HttpHandler) SendRequest(ctx domain.Context) []byte {
 	req, err := ctx.CreateRequest()
 	dump, err := httputil.DumpRequestOut(req, true)
 	log.Println(string(dump))
@@ -24,7 +22,12 @@ func (HttpGetHandler) SendRequest(ctx domain.Context) []byte {
 
 		log.Fatalln(err)
 	}
-	defer resp.Body.Close()
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			fmt.Println(fmt.Errorf("error closing the response body: %v", err))
+		}
+	}(resp.Body)
 	respBody, _ := io.ReadAll(resp.Body)
 	return respBody
 }

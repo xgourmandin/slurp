@@ -2,12 +2,15 @@ package domain
 
 import (
 	"errors"
+	"fmt"
 	"slurp/internal/core/utils"
 )
 
 var HttpMethod = []string{"GET", "POST"}
 
 var DataType = []string{"JSON", "XML"}
+
+var AuthType = []string{"API_KEY"}
 
 type ApiConfiguration struct {
 	Url                   string
@@ -30,6 +33,10 @@ type PaginationConfiguration struct {
 }
 
 type AuthenticationConfig struct {
+	AuthType   string
+	InHeader   bool
+	TokenEnv   string
+	TokenParam string
 }
 
 func (c *ApiConfiguration) FromMap(config map[string]interface{}) error {
@@ -49,8 +56,10 @@ func (c *ApiConfiguration) FromMap(config map[string]interface{}) error {
 	}
 	c.PaginationConfig = PaginationConfiguration{}
 	if paginationBlock, ok := config["pagination"]; ok {
-		if pageType, ok := paginationBlock.(map[string]interface{})["type"]; ok {
+		if pageType, ok := paginationBlock.(map[string]interface{})["type"]; ok && utils.Contains(PaginationType, pageType.(string)) {
 			c.PaginationConfig.PaginationType = pageType.(string)
+		} else {
+			return errors.New(fmt.Sprintf("No pagination type or wrong value given: %s", pageType))
 		}
 		if pageParam, ok := paginationBlock.(map[string]interface{})["page_param"]; ok {
 			c.PaginationConfig.PageParam = pageParam.(string)
@@ -63,6 +72,25 @@ func (c *ApiConfiguration) FromMap(config map[string]interface{}) error {
 		}
 	} else {
 		c.PaginationConfig.PaginationType = "NONE"
+	}
+	c.AuthConfig = AuthenticationConfig{}
+	if authenticationBlock, ok := config["auth"]; ok {
+		if authType, ok := authenticationBlock.(map[string]interface{})["type"]; ok && utils.Contains(AuthType, authType.(string)) {
+			c.AuthConfig.AuthType = authType.(string)
+		} else {
+			return errors.New(fmt.Sprintf("No authentication type or wrong value given: %s", authType))
+		}
+		if inHeader, ok := authenticationBlock.(map[string]interface{})["in_header"]; ok {
+			c.AuthConfig.InHeader = inHeader.(bool)
+		}
+		if tokenEnv, ok := authenticationBlock.(map[string]interface{})["token_env"]; ok {
+			c.AuthConfig.TokenEnv = tokenEnv.(string)
+		}
+		if tokenParam, ok := authenticationBlock.(map[string]interface{})["token_param"]; ok {
+			c.AuthConfig.TokenParam = tokenParam.(string)
+		}
+	} else {
+		c.AuthConfig.AuthType = "NONE"
 	}
 	if dataBlock, ok := config["data"]; ok {
 		dataType, ok := dataBlock.(map[string]interface{})["type"]

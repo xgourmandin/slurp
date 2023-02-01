@@ -15,6 +15,7 @@ func (s SlurpAnApiUseCase) SlurpAPI(ctx domain.Context) {
 	ctx.HttpStrategy = strategies.CreateHttpStrategy(ctx.ApiConfig.Method)
 	dataStrategy := strategies.CreateDataStrategy(ctx.ApiConfig.DataType, ctx.ApiConfig.DataRoot)
 	ctx.PaginationStrategy = strategies.CreatePaginationStrategy(ctx.ApiConfig, dataStrategy)
+	ctx.AuthenticationStrategy = strategies.CreateAuthenticationStrategy(ctx.ApiConfig)
 	ctx.DataStrategy = dataStrategy
 
 	hasMore := true

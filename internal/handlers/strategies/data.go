@@ -15,7 +15,10 @@ type JsonDataStrategy struct {
 
 func (s JsonDataStrategy) GetResultSize(response []byte) int {
 	jsonData := interface{}(nil)
-	json.Unmarshal(response, &jsonData)
+	err := json.Unmarshal(response, &jsonData)
+	if err != nil {
+		return 0
+	}
 	root, err := jsonpath.Get(s.DataRootPath, jsonData)
 	if err != nil {
 		return 0
@@ -25,7 +28,10 @@ func (s JsonDataStrategy) GetResultSize(response []byte) int {
 
 func (s JsonDataStrategy) ExtractData(body []byte, out chan interface{}) error {
 	jsonData := interface{}(nil)
-	json.Unmarshal(body, &jsonData)
+	err := json.Unmarshal(body, &jsonData)
+	if err != nil {
+		return err
+	}
 	root, err := jsonpath.Get(s.DataRootPath, jsonData)
 	if err != nil {
 		return err

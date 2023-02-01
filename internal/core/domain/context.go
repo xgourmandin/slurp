@@ -6,10 +6,11 @@ import (
 )
 
 type Context struct {
-	ApiConfig          ApiConfiguration
-	HttpStrategy       strategies.HttpStrategy
-	PaginationStrategy strategies.PaginationStrategy
-	DataStrategy       strategies.DataStrategy
+	ApiConfig              ApiConfiguration
+	HttpStrategy           strategies.HttpStrategy
+	PaginationStrategy     strategies.PaginationStrategy
+	AuthenticationStrategy strategies.AuthenticationStrategy
+	DataStrategy           strategies.DataStrategy
 }
 
 func (c Context) CreateRequest() (*http.Request, error) {
@@ -18,5 +19,6 @@ func (c Context) CreateRequest() (*http.Request, error) {
 		return nil, err
 	}
 	paginated := c.PaginationStrategy.ApplyPagination(*request)
-	return &paginated, nil
+	authenticated := c.AuthenticationStrategy.AddAuthentication(paginated)
+	return &authenticated, nil
 }

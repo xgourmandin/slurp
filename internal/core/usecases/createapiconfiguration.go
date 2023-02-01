@@ -18,7 +18,7 @@ func (uc CreateApiConfigurationUseCase) CreateApiConfiguration(apiName string) (
 	}
 	var apiConfig map[string]interface{}
 	if err := yaml.Unmarshal(configuration, &apiConfig); err != nil {
-		fmt.Errorf("unable to parse YAML file: %v", err)
+		fmt.Println(fmt.Errorf("unable to parse YAML file: %v", err))
 		return nil, err
 	}
 	apiConfiguration := domain.ApiConfiguration{}

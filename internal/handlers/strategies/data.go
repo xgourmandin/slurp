@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"github.com/PaesslerAG/jsonpath"
 	"reflect"
-	"slurp/internal/core/domain/strategies"
+	"slurp/internal/core/ports/strategies"
 )
 
 type JsonDataStrategy struct {

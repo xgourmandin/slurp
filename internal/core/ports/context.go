@@ -1,16 +1,18 @@
-package domain
+package ports
 
 import (
 	"net/http"
-	"slurp/internal/core/domain/strategies"
+	"slurp/internal/core/domain"
+	"slurp/internal/core/ports/strategies"
 )
 
 type Context struct {
-	ApiConfig              ApiConfiguration
+	ApiConfig              domain.ApiConfiguration
 	HttpStrategy           strategies.HttpStrategy
 	PaginationStrategy     strategies.PaginationStrategy
 	AuthenticationStrategy strategies.AuthenticationStrategy
 	DataStrategy           strategies.DataStrategy
+	ApiDataWriter          ApiDataWriter
 }
 
 func (c Context) CreateRequest() (*http.Request, error) {

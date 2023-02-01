@@ -3,3 +3,7 @@ method: GET
 data:
   type: json
   root: "$"
+output:
+  type: FILE
+  format: json
+  filename: cats-output.json

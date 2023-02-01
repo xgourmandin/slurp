@@ -2,7 +2,7 @@ package strategies
 
 import (
 	"net/http"
-	"slurp/internal/core/domain/strategies"
+	"slurp/internal/core/ports/strategies"
 	"strings"
 )
 

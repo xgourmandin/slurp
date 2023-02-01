@@ -3,7 +3,7 @@ package strategies
 import (
 	"net/http"
 	"slurp/internal/core/domain"
-	"slurp/internal/core/domain/strategies"
+	strategies2 "slurp/internal/core/ports/strategies"
 	"strconv"
 )
 
@@ -24,7 +24,7 @@ type PageLimitPaginationStrategy struct {
 	CurrentPage   int
 	LimitValue    int
 	MoreItemsPath *string // Data selector Path of the field telling us if there is more data to be fetched in the future (can be null, in this case, we rely on the size of the API response compared to the limit configured)
-	dataStrategy  strategies.DataStrategy
+	dataStrategy  strategies2.DataStrategy
 }
 
 func (s *PageLimitPaginationStrategy) ApplyPagination(req http.Request) http.Request {
@@ -50,7 +50,7 @@ type OffsetLimitPaginationStrategy struct {
 	LimitParam    string
 	CurrentOffset int
 	LimitValue    int
-	dataStrategy  strategies.DataStrategy
+	dataStrategy  strategies2.DataStrategy
 }
 
 func (s *OffsetLimitPaginationStrategy) ApplyPagination(req http.Request) http.Request {
@@ -66,7 +66,7 @@ func (s *OffsetLimitPaginationStrategy) HasMoreData(response []byte) bool {
 	return s.dataStrategy.GetResultSize(response) == s.LimitValue
 }
 
-func CreatePaginationStrategy(apiConfig domain.ApiConfiguration, dataStrategy strategies.DataStrategy) strategies.PaginationStrategy {
+func CreatePaginationStrategy(apiConfig domain.ApiConfiguration, dataStrategy strategies2.DataStrategy) strategies2.PaginationStrategy {
 	switch apiConfig.PaginationConfig.PaginationType {
 	case "PAGE_LIMIT":
 		return &PageLimitPaginationStrategy{

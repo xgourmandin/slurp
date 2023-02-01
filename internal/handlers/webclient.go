@@ -6,13 +6,13 @@ import (
 	"log"
 	"net/http"
 	"net/http/httputil"
-	"slurp/internal/core/domain"
+	"slurp/internal/core/ports"
 )
 
 type HttpHandler struct {
 }
 
-func (HttpHandler) SendRequest(ctx domain.Context) []byte {
+func (HttpHandler) SendRequest(ctx ports.Context) []byte {
 	req, err := ctx.CreateRequest()
 	dump, err := httputil.DumpRequestOut(req, true)
 	log.Println(string(dump))

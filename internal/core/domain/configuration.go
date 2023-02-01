@@ -10,8 +10,6 @@ var HttpMethod = []string{"GET", "POST"}
 
 var DataType = []string{"JSON", "XML"}
 
-var AuthType = []string{"API_KEY"}
-
 type ApiConfiguration struct {
 	Url                   string
 	Method                string
@@ -21,6 +19,7 @@ type ApiConfiguration struct {
 	DataRoot              string
 	AdditionalHeaders     map[string]string
 	AdditionalQueryParams map[string]string
+	OutputConfig          OutputConfig
 }
 
 var PaginationType = []string{"NONE", "LIMIT_OFFSET", "PAGE_LIMIT", "TOKEN", "LINK"}
@@ -32,11 +31,21 @@ type PaginationConfiguration struct {
 	PageSize       int
 }
 
+var AuthType = []string{"API_KEY"}
+
 type AuthenticationConfig struct {
 	AuthType   string
 	InHeader   bool
 	TokenEnv   string
 	TokenParam string
+}
+
+var OutputType = []string{"LOG", "FILE", "BUCKET"}
+
+type OutputConfig struct {
+	OutputType string
+	FileName   string
+	BucketName string
 }
 
 func (c *ApiConfiguration) FromMap(config map[string]interface{}) error {
@@ -100,6 +109,22 @@ func (c *ApiConfiguration) FromMap(config map[string]interface{}) error {
 		if dataRoot, ok := dataBlock.(map[string]interface{})["root"]; ok {
 			c.DataRoot = dataRoot.(string)
 		}
+	}
+	c.OutputConfig = OutputConfig{}
+	if outputBlock, ok := config["output"]; ok {
+		if outputType, ok := outputBlock.(map[string]interface{})["type"]; ok && utils.Contains(OutputType, outputType.(string)) {
+			c.OutputConfig.OutputType = outputType.(string)
+		} else {
+			return errors.New(fmt.Sprintf("No output type or wrong value given: %s", outputType))
+		}
+		if fileName, ok := outputBlock.(map[string]interface{})["filename"]; ok {
+			c.OutputConfig.FileName = fileName.(string)
+		}
+		if bucket, ok := outputBlock.(map[string]interface{})["bucket"]; ok {
+			c.OutputConfig.BucketName = bucket.(string)
+		}
+	} else {
+		c.OutputConfig.OutputType = "LOG"
 	}
 	return nil
 }

@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"os"
 	"slurp/internal/core/domain"
-	"slurp/internal/core/domain/strategies"
+	"slurp/internal/core/ports/strategies"
 )
 
 type NoAuthenticationStrategy struct {

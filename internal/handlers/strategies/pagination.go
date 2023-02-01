@@ -45,6 +45,27 @@ func (s *PageLimitPaginationStrategy) HasMoreData(response []byte) bool {
 	}
 }
 
+type OffsetLimitPaginationStrategy struct {
+	OffsetParam   string
+	LimitParam    string
+	CurrentOffset int
+	LimitValue    int
+	dataStrategy  strategies.DataStrategy
+}
+
+func (s *OffsetLimitPaginationStrategy) ApplyPagination(req http.Request) http.Request {
+	q := req.URL.Query()
+	q.Set(s.OffsetParam, strconv.Itoa(s.CurrentOffset))
+	q.Set(s.LimitParam, strconv.Itoa(s.LimitValue))
+	req.URL.RawQuery = q.Encode()
+	s.CurrentOffset = s.CurrentOffset + s.LimitValue
+	return req
+}
+
+func (s *OffsetLimitPaginationStrategy) HasMoreData(response []byte) bool {
+	return s.dataStrategy.GetResultSize(response) == s.LimitValue
+}
+
 func CreatePaginationStrategy(apiConfig domain.ApiConfiguration, dataStrategy strategies.DataStrategy) strategies.PaginationStrategy {
 	switch apiConfig.PaginationConfig.PaginationType {
 	case "PAGE_LIMIT":
@@ -54,6 +75,14 @@ func CreatePaginationStrategy(apiConfig domain.ApiConfiguration, dataStrategy st
 			CurrentPage:   1,
 			LimitValue:    apiConfig.PaginationConfig.PageSize,
 			MoreItemsPath: nil,
+			dataStrategy:  dataStrategy,
+		}
+	case "OFFSET_LIMIT":
+		return &OffsetLimitPaginationStrategy{
+			OffsetParam:   apiConfig.PaginationConfig.PageParam,
+			LimitParam:    apiConfig.PaginationConfig.LimitParam,
+			CurrentOffset: 0,
+			LimitValue:    apiConfig.PaginationConfig.PageSize,
 			dataStrategy:  dataStrategy,
 		}
 	default:

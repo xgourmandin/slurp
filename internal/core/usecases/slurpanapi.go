@@ -1,6 +1,7 @@
 package usecases
 
 import (
+	"log"
 	"slurp/internal/core/ports"
 )
 
@@ -19,6 +20,10 @@ func (s SlurpAnApiUseCase) SlurpAPI(ctx ports.Context) {
 			ctx.ApiDataWriter.StoreApiResult(v)
 		}
 		hasMore = ctx.PaginationStrategy.HasMoreData(response)
+	}
+	err := ctx.ApiDataWriter.Finalize()
+	if err != nil {
+		log.Fatalf("An error has occured during output finalization: %v", err)
 	}
 
 }

@@ -1,6 +1,7 @@
 package usecases
 
 import (
+	"fmt"
 	"slurp/internal/core/domain"
 	"slurp/internal/core/ports"
 	"slurp/internal/handlers"
@@ -32,6 +33,15 @@ func (c CreateContextUseCase) CreateContext(apiConfig domain.ApiConfiguration) p
 			BucketName: apiConfig.OutputConfig.BucketName,
 			FileName:   apiConfig.OutputConfig.FileName,
 		}
+	case "BIGQUERY":
+		ctx.ApiDataWriter = handlers.NewBigQueryWriter(
+			apiConfig.OutputConfig.Project,
+			apiConfig.OutputConfig.Dataset,
+			apiConfig.OutputConfig.Table,
+			apiConfig.OutputConfig.Autodetect,
+			fmt.Sprintf("/tmp/slurp-%s.json", apiConfig.OutputConfig.Table),
+		)
+
 	default:
 		ctx.ApiDataWriter = handlers.LogWriter{}
 	}

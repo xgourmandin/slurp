@@ -4,6 +4,10 @@ data:
   type: json
   root: "$"
 output:
-  type: FILE
+  type: BIGQUERY
   format: json
   filename: cats-output.json
+  project: xgo-sandbox
+  dataset: datalake_dev
+  autodetect: true
+  table: cats

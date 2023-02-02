@@ -40,12 +40,16 @@ type AuthenticationConfig struct {
 	TokenParam string
 }
 
-var OutputType = []string{"LOG", "FILE", "BUCKET"}
+var OutputType = []string{"LOG", "FILE", "BUCKET", "BIGQUERY"}
 
 type OutputConfig struct {
 	OutputType string
 	FileName   string
 	BucketName string
+	Project    string
+	Dataset    string
+	Table      string
+	Autodetect bool
 }
 
 func (c *ApiConfiguration) FromMap(config map[string]interface{}) error {
@@ -122,6 +126,20 @@ func (c *ApiConfiguration) FromMap(config map[string]interface{}) error {
 		}
 		if bucket, ok := outputBlock.(map[string]interface{})["bucket"]; ok {
 			c.OutputConfig.BucketName = bucket.(string)
+		}
+		if project, ok := outputBlock.(map[string]interface{})["project"]; ok {
+			c.OutputConfig.Project = project.(string)
+		}
+		if dataset, ok := outputBlock.(map[string]interface{})["dataset"]; ok {
+			c.OutputConfig.Dataset = dataset.(string)
+		}
+		if table, ok := outputBlock.(map[string]interface{})["table"]; ok {
+			c.OutputConfig.Table = table.(string)
+		}
+		if autodetect, ok := outputBlock.(map[string]interface{})["autodetect"]; ok {
+			c.OutputConfig.Autodetect = autodetect.(bool)
+		} else {
+			c.OutputConfig.Autodetect = false
 		}
 	} else {
 		c.OutputConfig.OutputType = "LOG"

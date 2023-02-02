@@ -3,6 +3,7 @@ module slurp
 go 1.19
 
 require (
+	cloud.google.com/go/bigquery v1.45.0
 	cloud.google.com/go/storage v1.29.0
 	github.com/PaesslerAG/jsonpath v0.1.1
 	gopkg.in/yaml.v3 v3.0.1

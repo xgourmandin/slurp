@@ -1,6 +1,9 @@
 package handlers
 
-import "fmt"
+import (
+	"fmt"
+	"slurp/internal/core/ports"
+)
 
 type LogWriter struct {
 	Format     string
@@ -8,6 +11,11 @@ type LogWriter struct {
 	FileName   string
 }
 
-func (s LogWriter) StoreApiResult(data interface{}) {
+func (s LogWriter) StoreApiResult(data interface{}) ports.ApiDataWriter {
 	fmt.Println(data)
+	return s
+}
+
+func (s LogWriter) Finalize() error {
+	return nil
 }

@@ -49,6 +49,7 @@ func (w BigQueryWriter) Finalize() error {
 	if err != nil {
 		return err
 	}
+	defer os.Remove(w.TmpFile)
 	source := bigquery.NewReaderSource(tmpFile)
 	source.SourceFormat = bigquery.JSON
 	source.AutoDetect = w.AutodetectSchema

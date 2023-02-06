@@ -10,7 +10,7 @@ import (
 )
 
 type GcpStorageApiConfigurationRepository struct {
-	apiConfigurationBucket string
+	ApiConfigurationBucket string
 }
 
 func (r GcpStorageApiConfigurationRepository) initStorageClient(ctx context.Context) (*storage.Client, error) {
@@ -29,9 +29,9 @@ func (r GcpStorageApiConfigurationRepository) GetApiConfiguration(apiName string
 		return nil, err
 	}
 	defer client.Close()
-	reader, err := client.Bucket(r.apiConfigurationBucket).Object(fmt.Sprintf("%s.yaml", apiName)).NewReader(ctx)
+	reader, err := client.Bucket(r.ApiConfigurationBucket).Object(fmt.Sprintf("%s.yaml", apiName)).NewReader(ctx)
 	if err != nil {
-		return nil, fmt.Errorf("Object(%q).NewReader: %v", apiName, err)
+		return nil, fmt.Errorf("Object(%s.yaml).NewReader: %v", apiName, err)
 	}
 	defer reader.Close()
 

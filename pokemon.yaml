@@ -1,0 +1,8 @@
+url: https://pokeapi.co/api/v2/ability
+method: GET
+pagination:
+  type: HATEOAS
+  next_link_path: "$.next"
+data:
+  type: json
+  root: "$.results"

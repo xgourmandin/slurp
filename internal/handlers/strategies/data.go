@@ -13,6 +13,24 @@ type JsonDataStrategy struct {
 	DataRootPath string // JSON Path of the root of the data to fetch. Can point to an array (nominal case) or a single element
 }
 
+func (s JsonDataStrategy) GetSingleValue(body []byte, path string) *string {
+	jsonData := interface{}(nil)
+	err := json.Unmarshal(body, &jsonData)
+	if err != nil {
+		return nil
+	}
+	root, err := jsonpath.Get(path, jsonData)
+	if err != nil {
+		return nil
+	}
+	if root == nil {
+		return nil
+	} else {
+		value := root.(string)
+		return &value
+	}
+}
+
 func (s JsonDataStrategy) GetResultSize(response []byte) int {
 	jsonData := interface{}(nil)
 	err := json.Unmarshal(response, &jsonData)

@@ -13,6 +13,7 @@ type Context struct {
 	AuthenticationStrategy strategies.AuthenticationStrategy
 	DataStrategy           strategies.DataStrategy
 	ApiDataWriter          ApiDataWriter
+	PreviousResponse       *[]byte
 }
 
 func (c Context) CreateRequest() (*http.Request, error) {
@@ -20,7 +21,7 @@ func (c Context) CreateRequest() (*http.Request, error) {
 	if err != nil {
 		return nil, err
 	}
-	paginated := c.PaginationStrategy.ApplyPagination(*request)
+	paginated := c.PaginationStrategy.ApplyPagination(*request, c.PreviousResponse)
 	authenticated := c.AuthenticationStrategy.AddAuthentication(paginated)
 	return &authenticated, nil
 }

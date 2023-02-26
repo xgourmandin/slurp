@@ -14,6 +14,7 @@ func (s SlurpAnApiUseCase) SlurpAPI(ctx ports.Context) {
 	hasMore := true
 	for hasMore {
 		response := s.ReqHandler.SendRequest(ctx)
+		ctx.PreviousResponse = &response
 		out := make(chan interface{})
 		go ctx.DataStrategy.ExtractData(response, out)
 		for v := range out {

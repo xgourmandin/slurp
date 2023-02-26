@@ -3,6 +3,6 @@ package strategies
 import "net/http"
 
 type PaginationStrategy interface {
-	ApplyPagination(http.Request) http.Request
+	ApplyPagination(http.Request, *[]byte) http.Request
 	HasMoreData(response []byte) bool
 }

@@ -17,6 +17,8 @@ func main() {
 	apiConfigUc := usecases.CreateApiConfigurationUseCase{
 		ApiRepository: repositories.GcpStorageApiConfigurationRepository{ApiConfigurationBucket: os.Getenv("CONFIGURATION_BUCKET")},
 	}
+	createContextUc := usecases.CreateContextUseCase{}
+	slurpAnApiUc := usecases.SlurpAnApiUseCase{ReqHandler: handlers.HttpHandler{}}
 
 	app := fiber.New()
 	app.Use(recover.New())
@@ -30,9 +32,9 @@ func main() {
 			log.Printf("An error has occured during API configuration parsing: %v", err)
 			return c.Status(500).SendString("Error in API retrieval configurations")
 		}
-		ctx := usecases.CreateContextUseCase{}.CreateContext(*apiConfiguration)
+		ctx := createContextUc.CreateContext(*apiConfiguration)
 
-		usecases.SlurpAnApiUseCase{ReqHandler: handlers.HttpHandler{}}.SlurpAPI(ctx)
+		slurpAnApiUc.SlurpAPI(ctx)
 		return c.SendString(fmt.Sprintf("{\"message\": \"API %s slurped\"}", apiName))
 	})
 	log.Fatal(app.Listen(":3000"))

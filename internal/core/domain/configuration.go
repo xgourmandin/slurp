@@ -22,13 +22,14 @@ type ApiConfiguration struct {
 	OutputConfig          OutputConfig
 }
 
-var PaginationType = []string{"NONE", "LIMIT_OFFSET", "PAGE_LIMIT", "TOKEN", "LINK"}
+var PaginationType = []string{"NONE", "LIMIT_OFFSET", "PAGE_LIMIT", "TOKEN", "HATEOAS"}
 
 type PaginationConfiguration struct {
 	PaginationType string
 	PageParam      string
 	LimitParam     string
 	PageSize       int
+	NextLinkPath   string
 }
 
 var AuthType = []string{"API_KEY"}
@@ -82,6 +83,9 @@ func (c *ApiConfiguration) FromMap(config map[string]interface{}) error {
 		}
 		if pageSize, ok := paginationBlock.(map[string]interface{})["page_size"]; ok {
 			c.PaginationConfig.PageSize = pageSize.(int)
+		}
+		if nextLinkPath, ok := paginationBlock.(map[string]interface{})["next_link_path"]; ok {
+			c.PaginationConfig.NextLinkPath = nextLinkPath.(string)
 		}
 	} else {
 		c.PaginationConfig.PaginationType = "NONE"

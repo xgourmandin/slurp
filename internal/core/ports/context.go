@@ -2,12 +2,11 @@ package ports
 
 import (
 	"net/http"
-	"slurp/internal/core/domain"
 	"slurp/internal/core/ports/strategies"
 )
 
 type Context struct {
-	ApiConfig              domain.ApiConfiguration
+	ApiConfig              ApiConfiguration
 	HttpStrategy           strategies.HttpStrategy
 	PaginationStrategy     strategies.PaginationStrategy
 	AuthenticationStrategy strategies.AuthenticationStrategy

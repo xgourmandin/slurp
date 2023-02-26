@@ -1,5 +1,5 @@
 package ports
 
 type ApiConfigurationRepository interface {
-	GetApiConfiguration(apiname string) ([]byte, error)
+	GetApiConfiguration(apiname string) (*ApiConfiguration, error)
 }

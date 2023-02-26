@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/PaesslerAG/jsonpath"
 	"reflect"
+	"slurp/internal/core/ports"
 	"slurp/internal/core/ports/strategies"
 )
 
@@ -78,6 +79,6 @@ func outputSingleValue(data interface{}, out chan interface{}) {
 	out <- data
 }
 
-func CreateDataStrategy(dataType string, dataRoot string) strategies.DataStrategy {
-	return JsonDataStrategy{DataRootPath: dataRoot}
+func CreateDataStrategy(dataConfig ports.DataConfiguration) strategies.DataStrategy {
+	return JsonDataStrategy{DataRootPath: dataConfig.DataRoot}
 }

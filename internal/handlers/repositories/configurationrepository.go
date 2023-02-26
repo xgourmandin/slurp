@@ -4,9 +4,11 @@ import (
 	"cloud.google.com/go/storage"
 	"context"
 	"fmt"
+	"gopkg.in/yaml.v3"
 	"io"
 	"log"
 	"os"
+	"slurp/internal/core/ports"
 )
 
 type GcpStorageApiConfigurationRepository struct {
@@ -22,7 +24,7 @@ func (r GcpStorageApiConfigurationRepository) initStorageClient(ctx context.Cont
 	return client, nil
 }
 
-func (r GcpStorageApiConfigurationRepository) GetApiConfiguration(apiName string) ([]byte, error) {
+func (r GcpStorageApiConfigurationRepository) GetApiConfiguration(apiName string) (*ports.ApiConfiguration, error) {
 	ctx := context.Background()
 	client, err := r.initStorageClient(ctx)
 	if err != nil {
@@ -39,14 +41,28 @@ func (r GcpStorageApiConfigurationRepository) GetApiConfiguration(apiName string
 	if err != nil {
 		return nil, fmt.Errorf("io.ReadAll: %v", err)
 	}
-	return data, nil
+	configuration := ports.ApiConfiguration{}
+	err = yaml.Unmarshal(data, &configuration)
+	if err != nil {
+		return nil, err
+	} else {
+		return &configuration, nil
+	}
 }
 
 type LocalApiRepository struct {
 }
 
-func (LocalApiRepository) GetApiConfiguration(name string) ([]byte, error) {
-	file, err := os.ReadFile(fmt.Sprintf("./%s.yaml", name))
-	return file, err
-
+func (r LocalApiRepository) GetApiConfiguration(name string) (*ports.ApiConfiguration, error) {
+	content, err := os.ReadFile(fmt.Sprintf("./%s.yaml", name))
+	if err != nil {
+		return nil, err
+	}
+	configuration := ports.ApiConfiguration{}
+	err = yaml.Unmarshal(content, &configuration)
+	if err != nil {
+		return nil, err
+	} else {
+		return &configuration, nil
+	}
 }

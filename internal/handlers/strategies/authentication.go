@@ -3,7 +3,7 @@ package strategies
 import (
 	"net/http"
 	"os"
-	"slurp/internal/core/domain"
+	"slurp/internal/core/ports"
 	"slurp/internal/core/ports/strategies"
 )
 
@@ -31,7 +31,7 @@ func (s ApiTokenAuthenticationStrategy) AddAuthentication(req http.Request) http
 	return req
 }
 
-func CreateAuthenticationStrategy(apiConfig domain.ApiConfiguration) strategies.AuthenticationStrategy {
+func CreateAuthenticationStrategy(apiConfig ports.ApiConfiguration) strategies.AuthenticationStrategy {
 	switch apiConfig.AuthConfig.AuthType {
 	case "API_KEY":
 		return ApiTokenAuthenticationStrategy{

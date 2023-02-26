@@ -1,12 +1,12 @@
 package strategies
 
 import (
-	"slurp/internal/core/domain"
+	"slurp/internal/core/ports"
 	"slurp/internal/core/ports/strategies"
 	"slurp/internal/handlers/strategies/pagination"
 )
 
-func CreatePaginationStrategy(apiConfig domain.ApiConfiguration, dataStrategy strategies.DataStrategy) strategies.PaginationStrategy {
+func CreatePaginationStrategy(apiConfig ports.ApiConfiguration, dataStrategy strategies.DataStrategy) strategies.PaginationStrategy {
 	switch apiConfig.PaginationConfig.PaginationType {
 	case "PAGE_LIMIT":
 		return &pagination.PageLimitPaginationStrategy{

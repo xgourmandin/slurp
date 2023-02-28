@@ -1,5 +1,0 @@
-url: https://test/api.com
-method: GET
-data:
-  type: JSON
-  root: "$"

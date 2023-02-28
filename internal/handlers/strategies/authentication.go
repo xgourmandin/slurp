@@ -1,10 +1,10 @@
 package strategies
 
 import (
+	"github.com/xgourmandin/slurp/internal/core/ports"
+	"github.com/xgourmandin/slurp/internal/core/ports/strategies"
 	"net/http"
 	"os"
-	"slurp/internal/core/ports"
-	"slurp/internal/core/ports/strategies"
 )
 
 type NoAuthenticationStrategy struct {

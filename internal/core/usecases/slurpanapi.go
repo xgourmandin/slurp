@@ -1,8 +1,8 @@
 package usecases
 
 import (
+	"github.com/xgourmandin/slurp/internal/core/ports"
 	"log"
-	"slurp/internal/core/ports"
 )
 
 type SlurpAnApiUseCase struct {

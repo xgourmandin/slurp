@@ -1,10 +1,10 @@
 package tests
 
 import (
+	"github.com/xgourmandin/slurp/internal/handlers/strategies"
+	"github.com/xgourmandin/slurp/internal/handlers/strategies/pagination"
 	"net/http"
 	"os"
-	"slurp/internal/handlers/strategies"
-	"slurp/internal/handlers/strategies/pagination"
 	"testing"
 )
 

@@ -4,9 +4,9 @@ import (
 	"cloud.google.com/go/bigquery"
 	"context"
 	"fmt"
+	"github.com/xgourmandin/slurp/internal/core/ports"
 	"log"
 	"os"
-	"slurp/internal/core/ports"
 )
 
 type BigQueryWriter struct {

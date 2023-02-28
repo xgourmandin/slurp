@@ -4,11 +4,11 @@ import (
 	"cloud.google.com/go/storage"
 	"context"
 	"fmt"
+	"github.com/xgourmandin/slurp/internal/core/ports"
 	"gopkg.in/yaml.v3"
 	"io"
 	"log"
 	"os"
-	"slurp/internal/core/ports"
 )
 
 type GcpStorageApiConfigurationRepository struct {

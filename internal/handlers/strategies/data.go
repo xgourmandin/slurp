@@ -5,9 +5,9 @@ import (
 	"errors"
 	"fmt"
 	"github.com/PaesslerAG/jsonpath"
+	"github.com/xgourmandin/slurp/internal/core/ports"
+	"github.com/xgourmandin/slurp/internal/core/ports/strategies"
 	"reflect"
-	"slurp/internal/core/ports"
-	"slurp/internal/core/ports/strategies"
 )
 
 type JsonDataStrategy struct {

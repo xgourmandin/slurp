@@ -2,9 +2,9 @@ package usecases
 
 import (
 	"fmt"
-	"slurp/internal/core/ports"
-	"slurp/internal/handlers"
-	"slurp/internal/handlers/strategies"
+	"github.com/xgourmandin/slurp/internal/core/ports"
+	"github.com/xgourmandin/slurp/internal/handlers"
+	"github.com/xgourmandin/slurp/internal/handlers/strategies"
 )
 
 type CreateContextUseCase struct {

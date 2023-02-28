@@ -1,4 +1,4 @@
-module slurp
+module github.com/xgourmandin/slurp
 
 go 1.20
 

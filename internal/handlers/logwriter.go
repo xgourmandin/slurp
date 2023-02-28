@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"fmt"
-	"slurp/internal/core/ports"
+	"github.com/xgourmandin/slurp/internal/core/ports"
 )
 
 type LogWriter struct {

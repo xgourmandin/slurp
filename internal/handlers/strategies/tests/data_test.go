@@ -1,8 +1,8 @@
 package tests
 
 import (
+	"github.com/xgourmandin/slurp/internal/handlers/strategies"
 	"os"
-	"slurp/internal/handlers/strategies"
 	"testing"
 )
 

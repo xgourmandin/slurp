@@ -1,11 +1,11 @@
 package main
 
 import (
+	"github.com/xgourmandin/slurp/internal/core/usecases"
+	"github.com/xgourmandin/slurp/internal/handlers"
+	"github.com/xgourmandin/slurp/internal/handlers/repositories"
 	"log"
 	"os"
-	"slurp/internal/core/usecases"
-	"slurp/internal/handlers"
-	"slurp/internal/handlers/repositories"
 )
 
 func main() {
@@ -15,7 +15,6 @@ func main() {
 	}.CreateContext(os.Args[1])
 	if err != nil {
 		log.Fatalf("An error ahs occured during API configuration parsing: %v", err)
-		panic(1)
 	}
 	usecases.SlurpAnApiUseCase{ReqHandler: handlers.HttpHandler{}}.SlurpAPI(*ctx)
 

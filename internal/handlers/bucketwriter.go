@@ -5,8 +5,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/xgourmandin/slurp/internal/core/ports"
 	"log"
-	"slurp/internal/core/ports"
 )
 
 var formatToContentType = map[string]string{

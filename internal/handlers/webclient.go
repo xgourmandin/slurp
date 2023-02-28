@@ -2,11 +2,11 @@ package handlers
 
 import (
 	"fmt"
+	"github.com/xgourmandin/slurp/internal/core/ports"
 	"io"
 	"log"
 	"net/http"
 	"net/http/httputil"
-	"slurp/internal/core/ports"
 )
 
 type HttpHandler struct {

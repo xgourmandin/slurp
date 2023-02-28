@@ -1,8 +1,8 @@
 package ports
 
 import (
+	"github.com/xgourmandin/slurp/internal/core/ports/strategies"
 	"net/http"
-	"slurp/internal/core/ports/strategies"
 )
 
 type Context struct {

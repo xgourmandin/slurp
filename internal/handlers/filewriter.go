@@ -2,9 +2,9 @@ package handlers
 
 import (
 	"encoding/json"
+	"github.com/xgourmandin/slurp/internal/core/ports"
 	"log"
 	"os"
-	"slurp/internal/core/ports"
 )
 
 type FileWriter struct {

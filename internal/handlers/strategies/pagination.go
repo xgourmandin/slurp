@@ -1,9 +1,9 @@
 package strategies
 
 import (
-	"slurp/internal/core/ports"
-	"slurp/internal/core/ports/strategies"
-	"slurp/internal/handlers/strategies/pagination"
+	"github.com/xgourmandin/slurp/internal/core/ports"
+	"github.com/xgourmandin/slurp/internal/core/ports/strategies"
+	"github.com/xgourmandin/slurp/internal/handlers/strategies/pagination"
 )
 
 func CreatePaginationStrategy(apiConfig ports.ApiConfiguration, dataStrategy strategies.DataStrategy) strategies.PaginationStrategy {

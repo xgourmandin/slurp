@@ -1,4 +1,4 @@
-package slurp
+package configuration
 
 type ApiConfiguration struct {
 	Url                   string                  `yaml:"url"`

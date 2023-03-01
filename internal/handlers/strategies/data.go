@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/PaesslerAG/jsonpath"
-	"github.com/xgourmandin/slurp"
+	"github.com/xgourmandin/slurp/configuration"
 	"github.com/xgourmandin/slurp/internal/core/ports/strategies"
 	"reflect"
 )
@@ -79,6 +79,6 @@ func outputSingleValue(data interface{}, out chan interface{}) {
 	out <- data
 }
 
-func CreateDataStrategy(dataConfig slurp.DataConfiguration) strategies.DataStrategy {
+func CreateDataStrategy(dataConfig configuration.DataConfiguration) strategies.DataStrategy {
 	return JsonDataStrategy{DataRootPath: dataConfig.DataRoot}
 }

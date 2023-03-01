@@ -1,7 +1,9 @@
 package ports
 
-import "github.com/xgourmandin/slurp"
+import (
+	"github.com/xgourmandin/slurp/configuration"
+)
 
 type ApiConfigurationRepository interface {
-	GetApiConfiguration(apiname string) (*slurp.ApiConfiguration, error)
+	GetApiConfiguration(apiname string) (*configuration.ApiConfiguration, error)
 }

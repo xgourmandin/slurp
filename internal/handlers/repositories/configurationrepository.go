@@ -4,7 +4,7 @@ import (
 	"cloud.google.com/go/storage"
 	"context"
 	"fmt"
-	"github.com/xgourmandin/slurp"
+	"github.com/xgourmandin/slurp/configuration"
 	"gopkg.in/yaml.v3"
 	"io"
 	"log"
@@ -24,7 +24,7 @@ func (r GcpStorageApiConfigurationRepository) initStorageClient(ctx context.Cont
 	return client, nil
 }
 
-func (r GcpStorageApiConfigurationRepository) GetApiConfiguration(apiName string) (*slurp.ApiConfiguration, error) {
+func (r GcpStorageApiConfigurationRepository) GetApiConfiguration(apiName string) (*configuration.ApiConfiguration, error) {
 	ctx := context.Background()
 	client, err := r.initStorageClient(ctx)
 	if err != nil {
@@ -41,7 +41,7 @@ func (r GcpStorageApiConfigurationRepository) GetApiConfiguration(apiName string
 	if err != nil {
 		return nil, fmt.Errorf("io.ReadAll: %v", err)
 	}
-	configuration := slurp.ApiConfiguration{}
+	configuration := configuration.ApiConfiguration{}
 	err = yaml.Unmarshal(data, &configuration)
 	if err != nil {
 		return nil, err
@@ -53,12 +53,12 @@ func (r GcpStorageApiConfigurationRepository) GetApiConfiguration(apiName string
 type LocalApiRepository struct {
 }
 
-func (r LocalApiRepository) GetApiConfiguration(name string) (*slurp.ApiConfiguration, error) {
+func (r LocalApiRepository) GetApiConfiguration(name string) (*configuration.ApiConfiguration, error) {
 	content, err := os.ReadFile(fmt.Sprintf("./%s.yaml", name))
 	if err != nil {
 		return nil, err
 	}
-	configuration := slurp.ApiConfiguration{}
+	configuration := configuration.ApiConfiguration{}
 	err = yaml.Unmarshal(content, &configuration)
 	if err != nil {
 		return nil, err

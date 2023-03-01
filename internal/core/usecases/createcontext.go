@@ -2,7 +2,7 @@ package usecases
 
 import (
 	"fmt"
-	"github.com/xgourmandin/slurp"
+	"github.com/xgourmandin/slurp/configuration"
 	"github.com/xgourmandin/slurp/internal/core/ports"
 	"github.com/xgourmandin/slurp/internal/handlers"
 	"github.com/xgourmandin/slurp/internal/handlers/strategies"
@@ -12,7 +12,7 @@ type CreateContextUseCase struct {
 	ApiConfigurationRepository ports.ApiConfigurationRepository
 }
 
-func (c CreateContextUseCase) CreateContextFromConfig(configuration *slurp.ApiConfiguration) (*ports.Context, error) {
+func (c CreateContextUseCase) CreateContextFromConfig(configuration *configuration.ApiConfiguration) (*ports.Context, error) {
 	ctx := ports.Context{
 		ApiConfig: *configuration,
 	}

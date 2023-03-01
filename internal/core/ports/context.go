@@ -1,13 +1,13 @@
 package ports
 
 import (
-	"github.com/xgourmandin/slurp"
+	"github.com/xgourmandin/slurp/configuration"
 	"github.com/xgourmandin/slurp/internal/core/ports/strategies"
 	"net/http"
 )
 
 type Context struct {
-	ApiConfig              slurp.ApiConfiguration
+	ApiConfig              configuration.ApiConfiguration
 	HttpStrategy           strategies.HttpStrategy
 	PaginationStrategy     strategies.PaginationStrategy
 	AuthenticationStrategy strategies.AuthenticationStrategy

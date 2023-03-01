@@ -2,6 +2,7 @@ package usecases
 
 import (
 	"fmt"
+	"github.com/xgourmandin/slurp"
 	"github.com/xgourmandin/slurp/internal/core/ports"
 	"github.com/xgourmandin/slurp/internal/handlers"
 	"github.com/xgourmandin/slurp/internal/handlers/strategies"
@@ -11,11 +12,7 @@ type CreateContextUseCase struct {
 	ApiConfigurationRepository ports.ApiConfigurationRepository
 }
 
-func (c CreateContextUseCase) CreateContext(apiName string) (*ports.Context, error) {
-	configuration, err := c.ApiConfigurationRepository.GetApiConfiguration(apiName)
-	if err != nil {
-		return nil, err
-	}
+func (c CreateContextUseCase) CreateContextFromConfig(configuration *slurp.ApiConfiguration) (*ports.Context, error) {
 	ctx := ports.Context{
 		ApiConfig: *configuration,
 	}
@@ -50,4 +47,12 @@ func (c CreateContextUseCase) CreateContext(apiName string) (*ports.Context, err
 		ctx.ApiDataWriter = handlers.LogWriter{}
 	}
 	return &ctx, nil
+}
+
+func (c CreateContextUseCase) CreateContext(apiName string) (*ports.Context, error) {
+	configuration, err := c.ApiConfigurationRepository.GetApiConfiguration(apiName)
+	if err != nil {
+		return nil, err
+	}
+	return c.CreateContextFromConfig(configuration)
 }

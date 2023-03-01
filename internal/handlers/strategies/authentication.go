@@ -1,7 +1,7 @@
 package strategies
 
 import (
-	"github.com/xgourmandin/slurp/internal/core/ports"
+	"github.com/xgourmandin/slurp"
 	"github.com/xgourmandin/slurp/internal/core/ports/strategies"
 	"net/http"
 	"os"
@@ -31,7 +31,7 @@ func (s ApiTokenAuthenticationStrategy) AddAuthentication(req http.Request) http
 	return req
 }
 
-func CreateAuthenticationStrategy(apiConfig ports.ApiConfiguration) strategies.AuthenticationStrategy {
+func CreateAuthenticationStrategy(apiConfig slurp.ApiConfiguration) strategies.AuthenticationStrategy {
 	switch apiConfig.AuthConfig.AuthType {
 	case "API_KEY":
 		return ApiTokenAuthenticationStrategy{

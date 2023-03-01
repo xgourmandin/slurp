@@ -8,3 +8,7 @@ import (
 func NewSlurpEngine() usecases.SlurpAnApiUseCase {
 	return usecases.SlurpAnApiUseCase{ReqHandler: handlers.HttpHandler{}}
 }
+
+func NewContextFactory() usecases.CreateContextUseCase {
+	return usecases.CreateContextUseCase{}
+}

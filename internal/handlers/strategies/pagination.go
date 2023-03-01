@@ -1,12 +1,12 @@
 package strategies
 
 import (
-	"github.com/xgourmandin/slurp/internal/core/ports"
+	"github.com/xgourmandin/slurp"
 	"github.com/xgourmandin/slurp/internal/core/ports/strategies"
 	"github.com/xgourmandin/slurp/internal/handlers/strategies/pagination"
 )
 
-func CreatePaginationStrategy(apiConfig ports.ApiConfiguration, dataStrategy strategies.DataStrategy) strategies.PaginationStrategy {
+func CreatePaginationStrategy(apiConfig slurp.ApiConfiguration, dataStrategy strategies.DataStrategy) strategies.PaginationStrategy {
 	switch apiConfig.PaginationConfig.PaginationType {
 	case "PAGE_LIMIT":
 		return &pagination.PageLimitPaginationStrategy{

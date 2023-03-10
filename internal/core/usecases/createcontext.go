@@ -6,6 +6,8 @@ import (
 	"github.com/xgourmandin/slurp/internal/core/ports"
 	"github.com/xgourmandin/slurp/internal/handlers"
 	"github.com/xgourmandin/slurp/internal/handlers/strategies"
+	"strings"
+	"time"
 )
 
 type CreateContextUseCase struct {
@@ -29,10 +31,12 @@ func (c CreateContextUseCase) CreateContextFromConfig(configuration *configurati
 			FileName: configuration.OutputConfig.FileName,
 		}
 	case "BUCKET":
+		chunked := strings.Split(configuration.OutputConfig.FileName, ".")
+		filename := strings.Join(chunked[:len(chunked)-1], ".") + time.Now().Format("20060201150405") + chunked[len(chunked)-1]
 		ctx.ApiDataWriter = handlers.GcsStorageWriter{
 			Format:     "json",
 			BucketName: configuration.OutputConfig.BucketName,
-			FileName:   configuration.OutputConfig.FileName,
+			FileName:   filename,
 		}
 	case "BIGQUERY":
 		ctx.ApiDataWriter = handlers.NewBigQueryWriter(
@@ -50,9 +54,9 @@ func (c CreateContextUseCase) CreateContextFromConfig(configuration *configurati
 }
 
 func (c CreateContextUseCase) CreateContext(apiName string) (*ports.Context, error) {
-	configuration, err := c.ApiConfigurationRepository.GetApiConfiguration(apiName)
+	config, err := c.ApiConfigurationRepository.GetApiConfiguration(apiName)
 	if err != nil {
 		return nil, err
 	}
-	return c.CreateContextFromConfig(configuration)
+	return c.CreateContextFromConfig(config)
 }

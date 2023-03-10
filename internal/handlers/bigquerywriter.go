@@ -54,7 +54,7 @@ func (w BigQueryWriter) Finalize() error {
 	source.SourceFormat = bigquery.JSON
 	source.AutoDetect = w.AutodetectSchema
 	loader := client.Dataset(w.Dataset).Table(w.Table).LoaderFrom(source)
-	loader.WriteDisposition = bigquery.WriteEmpty
+	loader.WriteDisposition = bigquery.WriteAppend
 
 	job, err := loader.Run(ctx)
 	if err != nil {

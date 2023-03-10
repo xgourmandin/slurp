@@ -9,9 +9,10 @@ type SlurpAnApiUseCase struct {
 	ReqHandler ports.RequestHandler
 }
 
-func (s SlurpAnApiUseCase) SlurpAPI(ctx ports.Context) {
+func (s SlurpAnApiUseCase) SlurpAPI(ctx ports.Context) int {
 
 	hasMore := true
+	dataCount := 0
 	for hasMore {
 		response := s.ReqHandler.SendRequest(ctx)
 		ctx.PreviousResponse = &response
@@ -19,6 +20,7 @@ func (s SlurpAnApiUseCase) SlurpAPI(ctx ports.Context) {
 		go ctx.DataStrategy.ExtractData(response, out)
 		for v := range out {
 			ctx.ApiDataWriter.StoreApiResult(v)
+			dataCount++
 		}
 		hasMore = ctx.PaginationStrategy.HasMoreData(response)
 	}
@@ -26,5 +28,6 @@ func (s SlurpAnApiUseCase) SlurpAPI(ctx ports.Context) {
 	if err != nil {
 		log.Fatalf("An error has occured during output finalization: %v", err)
 	}
+	return dataCount
 
 }

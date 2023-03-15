@@ -23,7 +23,7 @@ func (s SlurpAnApiUseCase) SlurpAPI(ctx ports.Context) int {
 		out := make(chan interface{})
 		go ctx.DataStrategy.ExtractData(response, out)
 		for v := range out {
-			ctx.ApiDataWriter.StoreApiResult(v)
+			ctx.ApiDataWriter = ctx.ApiDataWriter.StoreApiResult(v)
 			dataCount++
 		}
 		hasMore = ctx.PaginationStrategy.HasMoreData(response)

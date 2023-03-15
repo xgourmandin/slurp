@@ -11,4 +11,4 @@ jobs:
         run: |
           gh release create ${{ github.ref }} --generate-notes -t ${{ github.ref }}
         env:
-          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+          GH_TOKEN: ${{ secrets.RELEASE_TOKEN }}

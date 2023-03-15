@@ -14,7 +14,11 @@ func (s SlurpAnApiUseCase) SlurpAPI(ctx ports.Context) int {
 	hasMore := true
 	dataCount := 0
 	for hasMore {
-		response := s.ReqHandler.SendRequest(ctx)
+		response, err := s.ReqHandler.SendRequest(ctx)
+		if err != nil {
+			log.Printf("%v", err)
+			return 0
+		}
 		ctx.PreviousResponse = &response
 		out := make(chan interface{})
 		go ctx.DataStrategy.ExtractData(response, out)

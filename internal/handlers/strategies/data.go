@@ -61,7 +61,7 @@ func (s JsonDataStrategy) ExtractData(body []byte, out chan interface{}) error {
 	case interface{}:
 		outputSingleValue(root, out)
 	default:
-		return errors.New(fmt.Sprintf("Unkonw data type for the confiogured API: %s", reflect.TypeOf(root)))
+		return errors.New(fmt.Sprintf("Unkonw data type for the configured API: %s", reflect.TypeOf(root)))
 	}
 
 	return nil

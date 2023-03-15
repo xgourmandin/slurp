@@ -12,15 +12,14 @@ import (
 type HttpHandler struct {
 }
 
-func (HttpHandler) SendRequest(ctx ports.Context) []byte {
+func (HttpHandler) SendRequest(ctx ports.Context) ([]byte, error) {
 	req, err := ctx.CreateRequest()
 	dump, err := httputil.DumpRequestOut(req, true)
 	log.Println(string(dump))
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-
-		log.Fatalln(err)
+		return nil, err
 	}
 	defer func(Body io.ReadCloser) {
 		err := Body.Close()
@@ -29,5 +28,5 @@ func (HttpHandler) SendRequest(ctx ports.Context) []byte {
 		}
 	}(resp.Body)
 	respBody, _ := io.ReadAll(resp.Body)
-	return respBody
+	return respBody, nil
 }

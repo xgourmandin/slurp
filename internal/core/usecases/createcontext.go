@@ -32,7 +32,7 @@ func (c CreateContextUseCase) CreateContextFromConfig(configuration *configurati
 		}
 	case "BUCKET":
 		chunked := strings.Split(configuration.OutputConfig.FileName, ".")
-		filename := strings.Join(chunked[:len(chunked)-1], ".") + time.Now().Format("20060201150405") + chunked[len(chunked)-1]
+		filename := strings.Join(chunked[:len(chunked)-1], ".") + "-" + time.Now().Format("20060201150405") + "." + chunked[len(chunked)-1]
 		ctx.ApiDataWriter = handlers.GcsStorageWriter{
 			Format:     "json",
 			BucketName: configuration.OutputConfig.BucketName,

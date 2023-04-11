@@ -40,7 +40,7 @@ func (w GcsStorageWriter) Finalize() error {
 		wc.ContentType = "text/plain"
 	}
 
-	if binData, err := marshallData(w.Data, w.Format); err != nil {
+	if binData, err := marshallData(w.Data, w.Format); err == nil {
 		if _, err := wc.Write(binData); err != nil {
 			return err
 		}
@@ -50,9 +50,10 @@ func (w GcsStorageWriter) Finalize() error {
 
 	if err := wc.Close(); err != nil {
 		log.Printf("unable to close bucket %s, file %s: %v\n", w.BucketName, w.FileName, err)
+		return err
+	} else {
 		return nil
 	}
-	return nil
 }
 
 func marshallData(data []interface{}, format string) ([]byte, error) {

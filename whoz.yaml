@@ -1,0 +1,12 @@
+url: https://www.whoz.com/api/user/current
+method: GET
+data:
+  type: json
+  root: "$"
+auth:
+  type: CLIENT_CREDS
+  access_token_url: https://www.whoz.com/auth/realms/whoz/protocol/openid-connect/token
+  payload_template: grant_type=client_credentials&client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}
+  client_id: redacted
+  client_secret: redacted
+  access_token_path: $.access_token

@@ -46,7 +46,6 @@ func (c CreateContextUseCase) CreateContextFromConfig(configuration *configurati
 			configuration.OutputConfig.Autodetect,
 			fmt.Sprintf("/tmp/slurp-%s.json", configuration.OutputConfig.Table),
 		)
-
 	default:
 		ctx.ApiDataWriter = handlers.LogWriter{}
 	}

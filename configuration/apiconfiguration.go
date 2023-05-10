@@ -25,10 +25,15 @@ type PaginationConfiguration struct {
 }
 
 type AuthenticationConfig struct {
-	AuthType   string `yaml:"type"`
-	InHeader   bool   `yaml:"in_header"`
-	TokenEnv   string `yaml:"token_env"`
-	TokenParam string `yaml:"token_param"`
+	AuthType        string `yaml:"type"`
+	InHeader        bool   `yaml:"in_header"`
+	TokenEnv        string `yaml:"token_env"`
+	TokenParam      string `yaml:"token_param"`
+	AccessTokenUrl  string `yaml:"access_token_url"`
+	PayloadTemplate string `yaml:"payload_template"`
+	ClientId        string `yaml:"client_id"`
+	ClientSecret    string `yaml:"client_secret"`
+	AccessTokenPath string `yaml:"access_token_path"`
 }
 
 type OutputConfig struct {

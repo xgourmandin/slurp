@@ -2,7 +2,6 @@ package strategies
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"github.com/PaesslerAG/jsonpath"
 	"github.com/xgourmandin/slurp/configuration"
@@ -45,15 +44,18 @@ func (s JsonDataStrategy) GetResultSize(response []byte) int {
 	return len(root.([]interface{}))
 }
 
-func (s JsonDataStrategy) ExtractData(body []byte, out chan interface{}) error {
+func (s JsonDataStrategy) ExtractData(body []byte, out chan interface{}) {
+	fmt.Print(string(body))
 	jsonData := interface{}(nil)
 	err := json.Unmarshal(body, &jsonData)
 	if err != nil {
-		return err
+		println(fmt.Sprintf("Error during JSON unmarshall : %s", err.Error()))
+		close(out)
 	}
 	root, err := jsonpath.Get(s.DataRootPath, jsonData)
 	if err != nil {
-		return err
+		println(fmt.Sprintf("Error during data extraction with using json path %s: %s", s.DataRootPath, err.Error()))
+		close(out)
 	}
 	switch root.(type) {
 	case []interface{}:
@@ -61,10 +63,8 @@ func (s JsonDataStrategy) ExtractData(body []byte, out chan interface{}) error {
 	case interface{}:
 		outputSingleValue(root, out)
 	default:
-		return errors.New(fmt.Sprintf("Unkonw data type for the configured API: %s", reflect.TypeOf(root)))
+		println(fmt.Sprintf("Unkonw data type for the configured API: %s", reflect.TypeOf(root)))
 	}
-
-	return nil
 }
 
 func outputArrayData(data []interface{}, out chan interface{}) {

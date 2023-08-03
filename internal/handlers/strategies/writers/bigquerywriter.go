@@ -1,10 +1,10 @@
-package handlers
+package writers
 
 import (
 	"cloud.google.com/go/bigquery"
 	"context"
 	"fmt"
-	"github.com/xgourmandin/slurp/internal/core/ports"
+	"github.com/xgourmandin/slurp/internal/core/ports/strategies"
 	"log"
 	"os"
 )
@@ -32,7 +32,7 @@ func NewBigQueryWriter(project string, dataset string, table string, autodetect 
 	}
 }
 
-func (w BigQueryWriter) StoreApiResult(data interface{}) ports.ApiDataWriter {
+func (w BigQueryWriter) StoreApiResult(data interface{}) strategies.WriterStrategy {
 	w.tmpWriter.StoreApiResult(data)
 	return w
 }

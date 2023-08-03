@@ -12,7 +12,7 @@ type Context struct {
 	PaginationStrategy     strategies.PaginationStrategy
 	AuthenticationStrategy strategies.AuthenticationStrategy
 	DataStrategy           strategies.DataStrategy
-	ApiDataWriter          ApiDataWriter
+	ApiDataWriter          strategies.WriterStrategy
 	PreviousResponse       *[]byte
 }
 

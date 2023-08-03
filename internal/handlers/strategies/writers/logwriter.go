@@ -1,8 +1,8 @@
-package handlers
+package writers
 
 import (
 	"fmt"
-	"github.com/xgourmandin/slurp/internal/core/ports"
+	"github.com/xgourmandin/slurp/internal/core/ports/strategies"
 )
 
 type LogWriter struct {
@@ -11,7 +11,7 @@ type LogWriter struct {
 	FileName   string
 }
 
-func (s LogWriter) StoreApiResult(data interface{}) ports.ApiDataWriter {
+func (s LogWriter) StoreApiResult(data interface{}) strategies.WriterStrategy {
 	fmt.Println(data)
 	return s
 }

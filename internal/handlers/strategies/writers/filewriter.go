@@ -1,8 +1,8 @@
-package handlers
+package writers
 
 import (
 	"encoding/json"
-	"github.com/xgourmandin/slurp/internal/core/ports"
+	"github.com/xgourmandin/slurp/internal/core/ports/strategies"
 	"log"
 	"os"
 )
@@ -12,7 +12,7 @@ type FileWriter struct {
 	Format   string
 }
 
-func (w FileWriter) StoreApiResult(data interface{}) ports.ApiDataWriter {
+func (w FileWriter) StoreApiResult(data interface{}) strategies.WriterStrategy {
 	file, err := getFile(w.FileName)
 	if err != nil {
 		log.Fatalf("An error occured while appending to file %s : %v", w.FileName, err)

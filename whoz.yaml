@@ -1,4 +1,4 @@
-url: https://www.whoz.com/api/user/current
+url: https://www.whoz.com/api/project?workspaceId=60be95c121659c7557a65efe
 method: GET
 data:
   type: json

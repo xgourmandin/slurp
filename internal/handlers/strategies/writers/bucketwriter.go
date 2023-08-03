@@ -1,11 +1,11 @@
-package handlers
+package writers
 
 import (
 	"cloud.google.com/go/storage"
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/xgourmandin/slurp/internal/core/ports"
+	"github.com/xgourmandin/slurp/internal/core/ports/strategies"
 	"log"
 )
 
@@ -21,7 +21,7 @@ type GcsStorageWriter struct {
 	Data       []interface{}
 }
 
-func (w GcsStorageWriter) StoreApiResult(data interface{}) ports.ApiDataWriter {
+func (w GcsStorageWriter) StoreApiResult(data interface{}) strategies.WriterStrategy {
 	w.Data = append(w.Data, data)
 	return w
 }

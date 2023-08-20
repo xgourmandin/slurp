@@ -10,7 +10,6 @@ import (
 	"io"
 	"net/http"
 	"net/url"
-	"os"
 	"strings"
 )
 
@@ -29,15 +28,15 @@ type ApiTokenAuthenticationStrategy struct {
 }
 
 func (s ApiTokenAuthenticationStrategy) AddAuthentication(req http.Request) http.Request {
+	tokenValue, err := s.SecretManager.GetSecretValue(s.Token)
+	if err != nil {
+		fmt.Printf("%v\n", err)
+		return req
+	}
 	if s.InHeader {
-		req.Header.Add(s.AuthParam, os.Getenv(s.Token))
+		req.Header.Add(s.AuthParam, tokenValue)
 	} else {
 		q := req.URL.Query()
-		tokenValue, err := s.SecretManager.GetSecretValue(s.Token)
-		if err != nil {
-			fmt.Printf("%v\n", err)
-			return req
-		}
 		q.Set(s.AuthParam, tokenValue)
 		req.URL.RawQuery = q.Encode()
 	}

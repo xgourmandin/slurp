@@ -14,7 +14,7 @@ func main() {
 		ApiConfigurationRepository: repositories.LocalApiRepository{},
 	}.CreateContext(os.Args[1])
 	if err != nil {
-		log.Fatalf("An error ahs occured during API configuration parsing: %v", err)
+		log.Fatalf("An error has occured during API configuration parsing: %v", err)
 	}
 	usecases.SlurpAnApiUseCase{ReqHandler: handlers.HttpHandler{}}.SlurpAPI(*ctx)
 

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/PaesslerAG/jsonpath"
 	"github.com/xgourmandin/slurp/configuration"
+	"github.com/xgourmandin/slurp/internal/core/ports"
 	"github.com/xgourmandin/slurp/internal/core/ports/strategies"
 	"io"
 	"net/http"
@@ -21,9 +22,10 @@ func (NoAuthenticationStrategy) AddAuthentication(req http.Request) http.Request
 }
 
 type ApiTokenAuthenticationStrategy struct {
-	Token     string // Not the token itself, but the env variable name that holds the token
-	InHeader  bool   // If true, the token goes in an Authentication header, else, it goes in the query string
-	AuthParam string
+	SecretManager ports.SecretManager
+	Token         string // Not the token itself, but the env variable name that holds the token
+	InHeader      bool   // If true, the token goes in an Authentication header, else, it goes in the query string
+	AuthParam     string
 }
 
 func (s ApiTokenAuthenticationStrategy) AddAuthentication(req http.Request) http.Request {
@@ -31,13 +33,19 @@ func (s ApiTokenAuthenticationStrategy) AddAuthentication(req http.Request) http
 		req.Header.Add(s.AuthParam, os.Getenv(s.Token))
 	} else {
 		q := req.URL.Query()
-		q.Set(s.AuthParam, os.Getenv(s.Token))
+		tokenValue, err := s.SecretManager.GetSecretValue(s.Token)
+		if err != nil {
+			fmt.Printf("%v\n", err)
+			return req
+		}
+		q.Set(s.AuthParam, tokenValue)
 		req.URL.RawQuery = q.Encode()
 	}
 	return req
 }
 
 type ClientCredentialsAuthenticationStrategy struct {
+	SecretManager   ports.SecretManager
 	AccessTokenUrl  string
 	PayloadTemplate string
 	ClientId        string
@@ -48,8 +56,18 @@ type ClientCredentialsAuthenticationStrategy struct {
 
 func (s *ClientCredentialsAuthenticationStrategy) AddAuthentication(req http.Request) http.Request {
 	if s.currentToken == nil {
-		payload := strings.Replace(s.PayloadTemplate, "${CLIENT_ID}", s.ClientId, 1)
-		payload = strings.Replace(payload, "${CLIENT_SECRET}", s.ClientSecret, 1)
+		clientId, err := s.SecretManager.GetSecretValue(s.ClientId)
+		if err != nil {
+			fmt.Printf("%v\n", err)
+			return req
+		}
+		clientSecret, err := s.SecretManager.GetSecretValue(s.ClientId)
+		if err != nil {
+			fmt.Printf("%v\n", err)
+			return req
+		}
+		payload := strings.Replace(s.PayloadTemplate, "${CLIENT_ID}", clientId, 1)
+		payload = strings.Replace(payload, "${CLIENT_SECRET}", clientSecret, 1)
 		tokens := strings.Split(payload, "&")
 		data := url.Values{}
 		for _, token := range tokens {
@@ -92,20 +110,22 @@ func (s *ClientCredentialsAuthenticationStrategy) AddAuthentication(req http.Req
 	return req
 }
 
-func CreateAuthenticationStrategy(apiConfig configuration.ApiConfiguration) strategies.AuthenticationStrategy {
+func CreateAuthenticationStrategy(apiConfig configuration.ApiConfiguration, manager ports.SecretManager) strategies.AuthenticationStrategy {
 	switch apiConfig.AuthConfig.AuthType {
 	case "API_KEY":
 		return ApiTokenAuthenticationStrategy{
-			Token:     apiConfig.AuthConfig.TokenEnv,
-			InHeader:  apiConfig.AuthConfig.InHeader,
-			AuthParam: apiConfig.AuthConfig.TokenParam,
+			SecretManager: manager,
+			Token:         apiConfig.AuthConfig.TokenSecret,
+			InHeader:      apiConfig.AuthConfig.InHeader,
+			AuthParam:     apiConfig.AuthConfig.TokenParam,
 		}
 	case "CLIENT_CREDS":
 		return &ClientCredentialsAuthenticationStrategy{
+			SecretManager:   manager,
 			AccessTokenUrl:  apiConfig.AuthConfig.AccessTokenUrl,
 			PayloadTemplate: apiConfig.AuthConfig.PayloadTemplate,
-			ClientId:        apiConfig.AuthConfig.ClientId,
-			ClientSecret:    apiConfig.AuthConfig.ClientSecret,
+			ClientId:        apiConfig.AuthConfig.ClientIdSecret,
+			ClientSecret:    apiConfig.AuthConfig.ClientSecretSecret,
 			AccessTokenPath: apiConfig.AuthConfig.AccessTokenPath,
 		}
 	default:

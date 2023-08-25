@@ -10,3 +10,8 @@ auth:
   client_id: projects/729481141018/secrets/whoz-client-id/versions/latest
   client_secret: projects/729481141018/secrets/whoz-client-secret/versions/latest
   access_token_path: $.access_token
+output:
+  type: BUCKET
+  format: json
+  filename: extract_time={extract_time}/projects.json
+  bucket: cats-slurp

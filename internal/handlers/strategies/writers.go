@@ -5,8 +5,6 @@ import (
 	"github.com/xgourmandin/slurp/configuration"
 	"github.com/xgourmandin/slurp/internal/core/ports/strategies"
 	"github.com/xgourmandin/slurp/internal/handlers/strategies/writers"
-	"strings"
-	"time"
 )
 
 func NewWriterStrategy(apiConfig configuration.ApiConfiguration) strategies.WriterStrategy {
@@ -17,12 +15,10 @@ func NewWriterStrategy(apiConfig configuration.ApiConfiguration) strategies.Writ
 			FileName: apiConfig.OutputConfig.FileName,
 		}
 	case "BUCKET":
-		chunked := strings.Split(apiConfig.OutputConfig.FileName, ".")
-		filename := strings.Join(chunked[:len(chunked)-1], ".") + "-" + time.Now().Format("20060201150405") + "." + chunked[len(chunked)-1]
 		return writers.GcsStorageWriter{
 			Format:     "json",
 			BucketName: apiConfig.OutputConfig.BucketName,
-			FileName:   filename,
+			FileName:   apiConfig.OutputConfig.FileName,
 		}
 	case "BIGQUERY":
 		return writers.NewBigQueryWriter(

@@ -7,6 +7,8 @@ import (
 	"fmt"
 	"github.com/xgourmandin/slurp/internal/core/ports/strategies"
 	"log"
+	"strings"
+	"time"
 )
 
 var formatToContentType = map[string]string{
@@ -29,7 +31,8 @@ func (w GcsStorageWriter) StoreApiResult(data interface{}) strategies.WriterStra
 			log.Printf("%+v", err)
 			return w
 		}
-		wc := client.Bucket(w.BucketName).Object(w.FileName).NewWriter(ctx)
+		fileName := computeFilename(w.FileName)
+		wc := client.Bucket(w.BucketName).Object(fileName).NewWriter(ctx)
 		if contentType, ok := formatToContentType[w.Format]; ok {
 			wc.ContentType = contentType
 		} else {
@@ -42,11 +45,24 @@ func (w GcsStorageWriter) StoreApiResult(data interface{}) strategies.WriterStra
 		if _, err := w.writer.Write(binData); err != nil {
 			log.Printf("%+v", err)
 		}
+		if _, err := w.writer.Write([]byte("\n")); err != nil {
+			log.Printf("%+v", err)
+		}
 	} else {
 		log.Printf("%+v", err)
 	}
 
 	return w
+}
+
+func computeFilename(name string) string {
+	if strings.Contains(name, "{extract_time}") {
+		return strings.Replace(name, "{extract_time}", time.Now().UTC().Format(time.RFC3339), 1)
+	} else {
+		chunked := strings.Split(name, ".")
+		filename := strings.Join(chunked[:len(chunked)-1], ".") + "-" + time.Now().UTC().Format("20060201150405") + "." + chunked[len(chunked)-1]
+		return filename
+	}
 }
 
 func (w GcsStorageWriter) Finalize() error {

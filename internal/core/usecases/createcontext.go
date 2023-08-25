@@ -30,5 +30,5 @@ func (c CreateContextUseCase) CreateContext(apiName string) (*ports.Context, err
 	if err != nil {
 		return nil, err
 	}
-	return c.CreateContextFromConfig(config, "LOCAL")
+	return c.CreateContextFromConfig(config, "SERVER")
 }

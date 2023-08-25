@@ -7,6 +7,6 @@ auth:
   type: CLIENT_CREDS
   access_token_url: https://www.whoz.com/auth/realms/whoz/protocol/openid-connect/token
   payload_template: grant_type=client_credentials&client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}
-  client_id: redacted
-  client_secret: redacted
+  client_id: projects/729481141018/secrets/whoz-client-id/versions/latest
+  client_secret: projects/729481141018/secrets/whoz-client-secret/versions/latest
   access_token_path: $.access_token

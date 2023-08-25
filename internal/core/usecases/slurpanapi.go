@@ -2,6 +2,7 @@ package usecases
 
 import (
 	"github.com/xgourmandin/slurp/internal/core/ports"
+	"github.com/xgourmandin/slurp/internal/core/ports/strategies"
 	"log"
 )
 
@@ -9,15 +10,21 @@ type SlurpAnApiUseCase struct {
 	ReqHandler ports.RequestHandler
 }
 
-func (s SlurpAnApiUseCase) SlurpAPI(ctx ports.Context) int {
+func (s SlurpAnApiUseCase) SlurpAPIWithState(ctx ports.Context, state strategies.PaginationState) (int, strategies.PaginationState) {
+	ctx.PaginationStrategy = ctx.PaginationStrategy.Configure(state)
+	dataCount := s.SlurpAPI(ctx)
+	return dataCount, ctx.PaginationStrategy.NextContext()
+}
 
+func (s SlurpAnApiUseCase) SlurpAPI(ctx ports.Context) int {
 	hasMore := true
+	batchSizeReached := false
 	dataCount := 0
-	for hasMore {
+	for hasMore && !batchSizeReached {
 		response, err := s.ReqHandler.SendRequest(ctx)
 		if err != nil {
 			log.Printf("%v", err)
-			return 0
+			return dataCount
 		}
 		ctx.PreviousResponse = &response
 		out := make(chan interface{})
@@ -27,6 +34,7 @@ func (s SlurpAnApiUseCase) SlurpAPI(ctx ports.Context) int {
 			dataCount++
 		}
 		hasMore = ctx.PaginationStrategy.HasMoreData(response)
+		batchSizeReached = ctx.PaginationStrategy.IsBatchSizeReached()
 	}
 	err := ctx.ApiDataWriter.Finalize()
 	if err != nil {
